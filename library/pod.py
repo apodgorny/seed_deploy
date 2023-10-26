@@ -10,18 +10,20 @@
 import os
 import sys
 
-from library.files      import Files
-from library.seed_error import SeedError
-from library.no_op      import NoOp
+from library.files          import Files
+from library.seed_error     import SeedError
+from library.no_op          import NoOp
+from library.config_manager import ConfigManager
 
 
-class Pod:
+class Pod(ConfigManager):
 	def __init__(self, name):
 		self.name           = name
 		self.pod_path       = f'pod_sets/{self.name}'
 		self.templates_path = f'{self.pod_path}/templates'
 		self.build_path     = f'{self.pod_path}/build'
 		self.conf_path      = f'{self.pod_path}/conf'
+		super().__init__(self.pod_path)
 
 	######################### PUBLIC #########################
 
