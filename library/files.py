@@ -2,6 +2,8 @@ import os
 import shutil
 import settings
 
+from library.seed_error import SeedError
+
 
 class Files:
 	@staticmethod

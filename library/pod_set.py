@@ -9,7 +9,7 @@
 import os
 import settings
 
-from files              import Files
+from library.files      import Files
 from library.seed_error import SeedError
 
 
@@ -26,16 +26,22 @@ class PodSet:
 		print(f'Removed PodSet "{self.name}"')
 
 	def add_pod(self, name):
-		...
+		Files.mkdir(os.path.join('pod_sets', self.name, name))
+		print(f'Created Pod {name} on PodSet {self.name}')
 
-	def delet_pod(self, name):
-		...
+	def delete_pod(self, name):
+		Files.rm(os.path.join('pod_sets', self.name, name))
+		print(f'Removed Pod {name} on PodSet {self.name}')
 
 	def get_pod(self, name):
-		...
+		return Files.exists(os.path.join('pod_sets', self.name, name))
 
-	def build(self, pod_names, namespace_name):
-		...
+	def build(self, pods_names, namespaces_names):
+		for pod_name in pods_names:
+			for namespace_name in  namespaces_names:
+				...
 
-	def deploy(self, pod_names, namespace_name):
-		...
+	def deploy(self, pods_names, namespaces_names):
+		for pod_name in pods_names:
+			for namespace_name in namespaces_names:
+				...
