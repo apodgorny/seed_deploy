@@ -17,7 +17,7 @@ class Pod:
 	def delete(self):
 		...
 
-	def add_template(self, name):
+	def add_template(self, name, content):
 		...
 
 	def delete_templae(self, name):
