@@ -17,9 +17,10 @@ from library.config_manager import ConfigManager
 
 
 class Pod(ConfigManager):
-	def __init__(self, name):
+	def __init__(self, pod_set_name, name):
 		self.name           = name
-		self.pod_path       = f'pod_sets/{self.name}'
+		self.pod_set_name   = pod_set_name
+		self.pod_path       = f'pod_sets/{pod_set_name}/{self.name}'
 		self.templates_path = f'{self.pod_path}/templates'
 		self.build_path     = f'{self.pod_path}/build'
 		self.conf_path      = f'{self.pod_path}/conf'
@@ -42,16 +43,16 @@ class Pod(ConfigManager):
 
 			return self
 		except SeedError as e:
-			print(f'Error creating pod: {e}', file=sys.stderr)
-			return NoOp()
+			SeedError.error_exit(f'Error creating pod: {e}')
+		except FileNotFoundError as e:
+			SeedError.error_exit(f'PodSet "{self.pod_set_name}" does not exists.')
 
 	def delete(self):
 		try:
 			Files.rm(self.pod_path)
 			return self
 		except SeedError as e:
-			print(f'Error deleting pod: {e}', file=sys.stderr)
-			return NoOp()
+			SeedError.error_exit(f'Error deleting pod: {e}')
 
 	def create_template(self, name):
 		template_path = f'{self.templates_path}/{name}.yaml'
@@ -60,8 +61,7 @@ class Pod(ConfigManager):
 				pass  # Create an empty file
 			return self
 		except Exception as e:
-			print(f'Error creating template: {e}', file=sys.stderr)
-			return NoOp()
+			SeedError.error_exit(f'Error creating template: {e}')
 
 	def delete_template(self, name):
 		template_path = f'{self.templates_path}/{name}.yaml'
@@ -69,8 +69,7 @@ class Pod(ConfigManager):
 			os.remove(template_path)
 			return self
 		else:
-			print(f'Template {name} does not exist', file=sys.stderr)
-			return NoOp()
+			SeedError.error_exit(f'Template {name} does not exist')
 
 	def build(self, namespace_names):
 		# TODO: Add logic to build the pod for the given namespace names

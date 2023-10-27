@@ -1,6 +1,8 @@
 from settings            import *
 
 from library.arg_manager import ArgManager
+from library.files       import Files
+from library.namespace   import Namespace
 from library.pod_set     import PodSet
 
 
@@ -11,6 +13,10 @@ class Manager(ArgManager):
 			'delete': ['pod_set_name', 'name']
 		},
 		'pod_set': {
+			'create': ['name'],
+			'delete': ['name']
+		},
+		'namespace': {
 			'create': ['name'],
 			'delete': ['name']
 		}
@@ -34,6 +40,22 @@ class Manager(ArgManager):
 	def pod__delete(pod_set_name, name):
 		PodSet(pod_set_name).delete_pod(name)
 
+	@staticmethod
+	def namespace__create(name):
+		Namespace(name).create()
+
+	@staticmethod
+	def namespace__delete(name):
+		Namespace(name).delete()
+
+
+def main():
+	if not Files.exists('pod_sets'):
+		Files.mkdir('pod_sets')
+	if not Files.exists('namespaces'):
+		Files.mkdir('namespaces')
+	manager = Manager()
+
 
 if __name__ == '__main__':
-	manager = Manager()
+	main()

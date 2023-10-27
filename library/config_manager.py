@@ -3,12 +3,12 @@ import json
 import importlib.util
 
 class ConfigManager:
-	def __init__(self, directory_path):
-		self.constants = {}
-		self.variables = None
-		self.directory_path      = directory_path
-		self.constants_file_path = os.path.join(self.directory_path, 'constants.json')
-		self.variables_file_path = os.path.join(self.directory_path, 'variables.py')
+	def __init__(self, config_path):
+		self.constants   = {}
+		self.variables   = None
+		self.config_path = config_path
+		self.constants_file_path = os.path.join(self.config_path, 'constants.json')
+		self.variables_file_path = os.path.join(self.config_path, 'variables.py')
 		self._read_constants()
 		self._import_and_init_variables()
 

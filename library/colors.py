@@ -1,0 +1,10 @@
+class Colors:
+    RESET    = '\u001b[0m'
+    RED      = '\u001b[31m'
+    GREEN    = '\u001b[32m'
+    L_GREEN  = '\u001b[92m'
+    YELLOW   = '\u001b[33m'
+    BLUE     = '\u001b[34m'
+    VIOLET   = '\u001b[35m'
+    L_VIOLET = '\u001b[95m'
+    CYAN     = '\u001b[36m'

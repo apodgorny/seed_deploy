@@ -35,9 +35,9 @@ def test_create_and_delete_pod():
 		mock_mkdir.assert_called()
 
 		# Verify that open was called for constants.json
-		mock_file.assert_any_call('pod_sets/test_pod/conf/constants.json', 'w')
+		mock_file.assert_any_call('pod_sets/test_pod_set/test_pod/conf/constants.json', 'w')
 		# Verify that open was also called for variables.py
-		mock_file.assert_any_call('pod_sets/test_pod/conf/variables.py', 'w')
+		mock_file.assert_any_call('pod_sets/test_pod_set/test_pod/conf/variables.py', 'w')
 
 		# Delete a pod
 		pod_set.delete_pod('test_pod')

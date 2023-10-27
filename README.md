@@ -12,7 +12,7 @@ Deployment services for Kubernetes. Works for "seed" repo in particular, but can
 			– Templates
 				– template.deployment.yaml
 				...
-			– Source
+			– Config
 				– constants.json  // Configuration for a vagon – env data / contains docker-image link
 				– variables.py    // Dynamic configuratio for a vagon
 – Namespaces

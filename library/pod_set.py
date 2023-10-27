@@ -25,7 +25,7 @@ class PodSet:
 			for pod_name in os.listdir(pod_set_path):
 				pod_path = os.path.join(pod_set_path, pod_name)
 				if os.path.isdir(pod_path):
-					self.pods[pod_name] = Pod(pod_name)
+					self.pods[pod_name] = Pod(self.name, pod_name)
 
 	######################### PUBLIC #########################
 
@@ -40,7 +40,7 @@ class PodSet:
 		return self
 
 	def create_pod(self, name):
-		new_pod = Pod(name).create()
+		new_pod = Pod(self.name, name).create()
 		if new_pod:  # if not a NoOp object
 			self.pods[name] = new_pod
 			print(f'Created Pod {name} on PodSet {self.name}')
