@@ -16,7 +16,7 @@ from library.no_op          import NoOp
 from library.config_manager import ConfigManager
 
 
-class Pod(ConfigManager):
+class Pod:
 	def __init__(self, pod_set_name, name):
 		self.name           = name
 		self.pod_set_name   = pod_set_name
@@ -24,7 +24,7 @@ class Pod(ConfigManager):
 		self.templates_path = f'{self.pod_path}/templates'
 		self.build_path     = f'{self.pod_path}/build'
 		self.conf_path      = f'{self.pod_path}/conf'
-		super().__init__(self.pod_path)
+		self.conf_manager   = ConfigManager(self.pod_path)
 
 	######################### PUBLIC #########################
 
@@ -63,6 +63,10 @@ class Pod(ConfigManager):
 		except Exception as e:
 			SeedError.error_exit(f'Error creating template: {e}')
 
+	def get_teplates(self):
+		# TODO: implement
+		return []
+
 	def delete_template(self, name):
 		template_path = f'{self.templates_path}/{name}.yaml'
 		if Files.exists(template_path):
@@ -72,6 +76,10 @@ class Pod(ConfigManager):
 			SeedError.error_exit(f'Template {name} does not exist')
 
 	def build(self, namespace_names):
+		for namespace_name in namespace_names:
+			namespace = Namespace(namespace_name)
+			DeployManager(namespace, self).build()
+
 		# TODO: Add logic to build the pod for the given namespace names
 		return self  # Assuming successful for now
 

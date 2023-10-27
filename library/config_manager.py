@@ -47,6 +47,15 @@ class ConfigManager:
 		# Return default if name not found in either
 		return default
 
+	def apply(template_content):
+		pattern = re.compile(f'\\${{{self.role}}\\.([a-zA-Z0-9_]+)}')
+		
+		def replace_var(match):
+			var_name = match.group(1)
+			return self.get(var_name)
+			
+		return pattern.sub(replace_var, template_content)
+
 # Usage
 # config_manager = ConfigManager('/path/to/your/directory')
 # result = config_manager.get('some_key', 'default_value')
