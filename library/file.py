@@ -20,16 +20,19 @@ class File:
 
 	@staticmethod
 	def rm(path):
-		path = File.exists(path)
+		path = File.path(path)
 		if not os.path.exists(path):
 			raise SeedError(f'Entity does not exist')
 		return shutil.rmtree(path)
 
 	@staticmethod
-	def mkdir(path):
+	def mkdir(path, overwrite=False):
 		if File.exists(path):
-			raise SeedError(f'Directory "{path}" already exists')
-		return os.mkdir(File.path(path))
+			if overwrite:
+				File.rm(path)
+				return os.mkdir(File.path(path))
+		else:
+			return os.mkdir(File.path(path))
 
 	@staticmethod
 	def mkfile(path, content=''):
@@ -40,8 +43,6 @@ class File:
 
 	@staticmethod
 	def write(path, content=''):
-		if not File.exists(path):
-			raise SeedError(f'File "{path}" does not exists')
 		with open(File.path(path), 'w') as f:
 			f.write(content)
 
@@ -61,3 +62,13 @@ class File:
 			if os.path.isdir(item_path) and not item.startswith(('_', '.')):
 				dirs.append(item)
 		return dirs
+
+	@staticmethod
+	def list_files(path='', ext=[]):
+		path = File.exists(path)
+		files = []
+		for item in sorted(os.listdir(path)):
+			item_path = os.path.join(path, item)
+			if os.path.isfile(item_path) and not item.startswith(('.', '_')) and item.endswith(tuple(ext)):
+				files.append(item)
+		return files

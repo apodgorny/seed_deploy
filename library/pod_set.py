@@ -52,18 +52,12 @@ class PodSet:
 		else:
 			SeedError.error_exit(f'Pod "{self.name} -> {pod_name}" does not exists.')
 
-	def build(self, pod_names, namespace_names):
+	def build(self, namespace_name):
 		self._guard()
-		for pod_name in pod_names:
-			pod = self.get_pod(pod_name)
-			if pod:
-				pod.build(namespace_names)
+		for pod_name in self.pods:
+			self.get(pod_name).build(namespace_name)
 		return self
 
 	def deploy(self, pod_names, namespace_names):
 		self._guard()
-		for pod_name in pod_names:
-			pod = self.get_pod(pod_name)
-			if pod:
-				pod.deploy(namespace_names)
 		return self

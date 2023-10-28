@@ -10,60 +10,74 @@ from library.pod             import Pod
 class Manager(CommandManager):
 	DIRS = [PODSETS_DIR_NAME, NAMESPACES_DIR_NAME]
 	COMMANDS = {
-		'pod': {
-			'create' : ['pod_set_name', 'name'],
-			'delete' : ['pod_set_name', 'name'],
-			'list'   : ['pod_set_name']
+		'create': {
+			'podset'    : ['podset_name'],
+			'pod'       : ['podset_name', 'pod_name'],
+			'namespace' : ['namespace_name']  
 		},
-		'podset': { 
-			'create' : ['name'],
-			'delete' : ['name'],
-			'list'   : []
+		'delete': {
+			'podset'    : ['podset_name'],
+			'pod'       : ['podset_name', 'pod_name'],
+			'namespace' : ['namespace_name']  
 		},
-		'namespace':  {
-			'create' : ['name'],
-			'delete' : ['name']
+		'build': {
+			'podset'    : ['podset_name', 'namespace_name'],
+			'pod'       : ['podset_name', 'pod_name', 'namespace_name'],
+			'all'       : []
 		},
-		'list': []
+		'list': [],
 	}
-
+		
 	######################### PUBLIC #########################
 
 	@staticmethod
-	def podset__create(name):
-		PodSet(name).create()
+	def create__podset(podset_name):
+		PodSet(podset_name).create()
 
 	@staticmethod
-	def podset__delete(name):
-		PodSet(name).delete()
+	def create__pod(podset_name, pod_name):
+		podset = PodSet(podset_name)
+		Pod(podset, pod_name).create()
+
+	@staticmethod
+	def create__namespace(namespace_name):
+		Namespace(namespace_name).create()
+
+	@staticmethod
+	def delete__podset(podset_name):
+		PodSet(podset_name).delete()
+
+	@staticmethod
+	def delete__pod(podset_name, pod_name):
+		PodSet(podset_name).get(pod_name).delete()
+
+	@staticmethod
+	def delete__namespace(namespace_name):
+		Namespace(namespace_name).delete()
 
 	@staticmethod
 	def list():
-		indent = ' '
-		print(indent, 'Podsets:')
+		i = ' '
+		print(i, 'Podsets:')
 		for d in File.list_dirs(PODSETS_DIR_NAME):
-			print(indent + '  ', '-', d)
-			PodSet(d).list(indent + '    ') 
-		print(indent, 'Namespaces:')
+			podset = PodSet(d)
+			print(i, '-', podset.name)
+			for _, pod in podset.pods.items():
+				print(i, i, '-', pod.name)
+				for ns, files in pod.get_build().items():
+					print(i, i, i, '::', ns, files)
+		print(i, 'Namespaces:')
 		for d in File.list_dirs(NAMESPACES_DIR_NAME):
-			print(indent + '  ', '-', d)
+			namespace = Namespace(d)
+			print(i, i, '-', namespace.name)
 
 	@staticmethod
-	def pod__create(pod_set_name, name):
-		pod_set = PodSet(pod_set_name)
-		Pod(pod_set, name).create()
+	def build__podset(podset_name, namespace_name):
+		PodSet(podset_name).build(namespace_name)
 
 	@staticmethod
-	def pod__delete(pod_set_name, name):
-		PodSet(pod_set_name).pods[name].delete()
-
-	@staticmethod
-	def namespace__create(name):
-		Namespace(name).create()
-
-	@staticmethod
-	def namespace__delete(name):
-		Namespace(name).delete()
+	def build__pod(podset_name, pod_name, namespace_name):
+		PodSet(podset_name).get(pod_name).build(namespace_name)
 
 
 if __name__ == '__main__':

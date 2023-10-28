@@ -1,0 +1,11 @@
+test_config:
+  namespace_data:
+    var1: $namespace.var1
+    var2: $namespace.var2
+    const1: $namespace.const1
+    const2: $namespace.const2
+  pod_data:
+    var1: $pod.var1
+    var2: $pod.var2
+    const1: $pod.const1
+    const2: $pod.const2

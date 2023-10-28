@@ -26,7 +26,7 @@ class Namespace():
 		try:
 			File.mkdir(self.path)
 			self.conf.create()
-			print(f'Created Namespace "{self.name}"')
+			print(f'Created Namespace: "{self.name}"')
 			return self
 		except Exception as e:
 			SeedError.error_exit(f'Error creating namespace: {e}', file=sys.stderr)
@@ -37,4 +37,4 @@ class Namespace():
 			File.rm(self.path)
 		except SeedError as e:
 			SeedError.error_exit(str(e))
-		print(f'Deleted Namespace "{self.name}".')
+		print(f'Deleted Namespace: "{self.name}".')

@@ -12,21 +12,17 @@ class ConfManager:
 		self.path           = File.path(base_path, 'conf')
 		self.constants_path = File.path(base_path, 'conf', 'constants.json')
 		self.variables_path = File.path(base_path, 'conf', 'variables.py')
-		self.isInitialized  = False
 
 	######################### PRIVATE #######################
 
 	def _init(self):
-		if not self.isInitialized:
-			if not File.exists(self.path):
-				File.mkdir(self.path)
+		if not File.exists(self.path):
+			File.mkdir(self.path)
+			File.write(self.constants_path, File.read('templates/constants.json'))
+			File.write(self.variables_path, File.read('templates/variables.py'))
 
-			File.mkfile(self.constants_path, '{}')
-			File.mkfile(self.variables_path, 'class Variables:\n\t...')
-
-			self._read_constants()
-			self._read_variables()
-			self.isInitialized = True
+		self._read_constants()
+		self._read_variables()
 
 	def _read_constants(self):
 		contents = File.read(self.constants_path)
@@ -48,19 +44,17 @@ class ConfManager:
 
 	def get(self, name, default=None):
 		self._init()
-
-		# Search in constants
-		value = self.constants.get(name, None)
-		if value is not None:
-			return value
 		
+		# Search in constants
+		if name in self.constants:
+			return self.constants[name]
+
 		# Search in variables
 		if self.variables:
 			value = self.variables.get(name, None)
 			if value is not None:
 				return value
 		
-		# Return default if name not found in either
 		return default
 
 	def apply(template_content):
