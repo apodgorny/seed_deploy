@@ -1,5 +1,5 @@
 import pytest
-from library.arg_manager import ArgManager
+from library.command_manager import CommandManager
 
 def test_arg_manager_functionality():
     pass

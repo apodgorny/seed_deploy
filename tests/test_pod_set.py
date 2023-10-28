@@ -5,8 +5,8 @@ from unittest.mock   import patch, mock_open, MagicMock
 from library.pod_set import PodSet
 
 def test_pod_set_creation_and_deletion():
-	with patch('library.files.Files.mkdir') as mock_mkdir, \
-		 patch('library.files.Files.rm') as mock_rm:
+	with patch('library.file.File.mkdir') as mock_mkdir, \
+		 patch('library.file.File.rm') as mock_rm:
 
 		# Initialize the PodSet object and call create
 		pod_set = PodSet('test_pod_set')
@@ -21,8 +21,8 @@ def test_pod_set_creation_and_deletion():
 
 
 def test_create_and_delete_pod():
-	with patch('library.files.Files.mkdir') as mock_mkdir, \
-	     patch('library.files.Files.rm') as mock_rm, \
+	with patch('library.file.File.mkdir') as mock_mkdir, \
+	     patch('library.file.File.rm') as mock_rm, \
 	     patch('builtins.open', mock_open()) as mock_file:
 
 		# Initialize PodSet and create it
@@ -47,10 +47,10 @@ def test_create_and_delete_pod():
 
 
 def test_create_and_delete_template():
-	with patch('library.files.Files.exists') as mock_exists, \
-	     patch('library.files.Files.rm') as mock_remove, \
+	with patch('library.file.File.exists') as mock_exists, \
+	     patch('library.file.File.rm') as mock_remove, \
 	     patch('os.listdir') as mock_listdir, \
-	     patch('library.files.Files.mkdir') as mock_mkdir, \
+	     patch('library.file.File.mkdir') as mock_mkdir, \
 	     patch('builtins.open', mock_open()) as mock_file:
 
 		# Simulate that the directory does exist
@@ -75,8 +75,8 @@ def test_create_and_delete_template():
 
 def test_get_pod():
 	with patch('library.pod.Pod') as MockPod, \
-	     patch('library.files.Files.mkdir') as mock_mkdir, \
-	     patch('library.files.Files.rm') as mock_rm:
+	     patch('library.file.File.mkdir') as mock_mkdir, \
+	     patch('library.file.File.rm') as mock_rm:
 
 		# Initialize PodSet and create it
 		pod_set = PodSet('test_pod_set').create()
@@ -92,7 +92,7 @@ def test_get_pod():
 		assert pod_set.get_pod('non_existing_pod') == None
 
 def test_read_pods():
-	with patch('library.files.Files.exists') as mock_exists, \
+	with patch('library.file.File.exists') as mock_exists, \
 	     patch('os.listdir') as mock_listdir, \
 	     patch('os.path.isdir') as mock_isdir, \
 	     patch('library.pod.Pod') as MockPod:
@@ -119,13 +119,13 @@ def test_read_pods():
 		assert 'test_pod_1' in pod_set.pods
 
 def test_podset_initialization_failure():
-	with patch('library.files.Files.exists') as mock_exists:
+	with patch('library.file.File.exists') as mock_exists:
 		mock_exists.return_value = False
 		pod_set = PodSet('test_pod_set')
 		assert pod_set.pods == {}
 
 def test_empty_podset():
-	with patch('library.files.Files.exists') as mock_exists, \
+	with patch('library.file.File.exists') as mock_exists, \
 	     patch('os.listdir') as mock_listdir:
 		mock_exists.return_value = True
 		mock_listdir.return_value = []
@@ -133,7 +133,7 @@ def test_empty_podset():
 		assert pod_set.pods == {}
 
 def test_non_directory_files_in_podset():
-	with patch('library.files.Files.exists') as mock_exists, \
+	with patch('library.file.File.exists') as mock_exists, \
 	     patch('os.listdir') as mock_listdir, \
 	     patch('os.path.isdir') as mock_isdir:
 
@@ -145,7 +145,7 @@ def test_non_directory_files_in_podset():
 		assert 'file.txt' not in pod_set.pods
 
 def test_multiple_pods():
-	with patch('library.files.Files.exists') as mock_exists, \
+	with patch('library.file.File.exists') as mock_exists, \
 	     patch('os.listdir') as mock_listdir, \
 	     patch('os.path.isdir') as mock_isdir, \
 	     patch('library.pod.Pod') as MockPod:

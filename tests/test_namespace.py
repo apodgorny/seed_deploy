@@ -10,7 +10,7 @@ def fake_open(*args, **kwargs):
     yield MagicMock()
 
 def test_namespace_creation():
-    with patch('library.files.Files.mkdir', autospec=True) as mock_mkdir, \
+    with patch('library.file.File.mkdir', autospec=True) as mock_mkdir, \
         patch('builtins.open', new=fake_open):
         
         # Side effect (just to aid debugging)

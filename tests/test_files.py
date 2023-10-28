@@ -1,5 +1,5 @@
 import pytest
-from library.files import Files
+from library.file import File
 
 def test_files_functionality():
     pass

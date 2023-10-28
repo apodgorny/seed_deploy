@@ -160,5 +160,5 @@ cython_debug/
 .idea/
 
 # Project files
-pod_sets/
+podsets/
 namespaces/

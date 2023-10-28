@@ -1,62 +1,59 @@
-# – Pod Set
-# 	create(pod_set_name)
-# 	addPod(pod_name)
-# 	deletePod(pod_name)
-# 	getPod(pod_name)
-# 	build(pod_names[], namespace_name[])
-# 	deploy(pod_names[], namespace_names[])
-
 import os
 
-from library.files import Files
-from library.pod   import Pod
+from settings import *
+
+from library.file       import File
+from library.pod        import Pod
+from library.seed_error import SeedError
 
 class PodSet:
 	def __init__(self, name):
 		self.name = name
 		self.pods = {}
+		self.path = File.path(PODSETS_DIR_NAME, self.name)
 		self._read_pods()
 
 	######################### PRIVATE ########################
 
 	def _read_pods(self):
-		pod_set_path = os.path.join('pod_sets', self.name)
-		if Files.exists(pod_set_path):
-			for pod_name in os.listdir(pod_set_path):
-				pod_path = os.path.join(pod_set_path, pod_name)
-				if os.path.isdir(pod_path):
-					self.pods[pod_name] = Pod(self.name, pod_name)
+		if File.exists(self.path):
+			for pod_name in File.list_dirs(self.path):
+				self.pods[pod_name] = Pod(self, pod_name)
+
+	def _guard(self):
+		if not File.exists(self.path):
+			SeedError.error_exit(f'PodSet "{self.name}" does not exist.')
 
 	######################### PUBLIC #########################
 
 	def create(self):
-		Files.mkdir(os.path.join('pod_sets', self.name))
-		print(f'Created PodSet "{self.name}"')
+		if not File.exists(self.path):
+			File.mkdir(self.path)
+			print(f'Created PodSet "{self.name}"')
+		else:
+			SeedError.error_exit(f'PodSet "{self.name}" already exists.')
 		return self
 
 	def delete(self):
-		Files.rm(os.path.join('pod_sets', self.name))
+		self._guard()
+		File.rm(os.path.join('pod_sets', self.name))
 		print(f'Removed PodSet "{self.name}"')
 		return self
 
-	def create_pod(self, name):
-		new_pod = Pod(self.name, name).create()
-		if new_pod:  # if not a NoOp object
-			self.pods[name] = new_pod
-			print(f'Created Pod {name} on PodSet {self.name}')
-		return self
+	def list(self, indent=''):
+		self._guard()
+		for pod in self.pods:
+			print(indent + '- ' + pod)
 
-	def delete_pod(self, name):
-		if name in self.pods:
-			self.pods[name].delete()
-			del self.pods[name]
-			print(f'Removed Pod {name} on PodSet {self.name}')
-		return self
-
-	def get_pod(self, name):
-		return self.pods.get(name, None)
+	def get(self, pod_name):
+		self._guard()
+		if pod_name in self.pods:
+			return self.pods[pod_name]
+		else:
+			SeedError.error_exit(f'Pod "{self.name} -> {pod_name}" does not exists.')
 
 	def build(self, pod_names, namespace_names):
+		self._guard()
 		for pod_name in pod_names:
 			pod = self.get_pod(pod_name)
 			if pod:
@@ -64,6 +61,7 @@ class PodSet:
 		return self
 
 	def deploy(self, pod_names, namespace_names):
+		self._guard()
 		for pod_name in pod_names:
 			pod = self.get_pod(pod_name)
 			if pod:
