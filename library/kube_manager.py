@@ -2,8 +2,7 @@ import os
 import subprocess
 
 from library.seed_error import SeedError
-
-
+# TODO: user kubernetes python lib instead running subprocess
 class KubeManager:
 	@staticmethod
 	def _exec(command, path=None):

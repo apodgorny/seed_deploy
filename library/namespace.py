@@ -31,7 +31,7 @@ class Namespace:
 		try:
 			File.mkdir(self.path)
 			constants = {}
-			if (namespace_like_name):
+			if namespace_like_name:
 				constants.update(Namespace(namespace_like_name).conf.get_constants())
 				
 			constants['namespace'] = self.name
@@ -40,7 +40,7 @@ class Namespace:
 			print(f'Created Namespace: "{self.name}"')
 			return self
 		except Exception as e:
-			SeedError.error_exit(f'Error creating namespace: {e}', file=sys.stderr)
+			SeedError.error_exit(f'Error creating namespace: {e}')
 
 	def delete(self):
 		self._guard()
