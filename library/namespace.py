@@ -6,9 +6,10 @@ from settings import *
 from library.file         import File
 from library.conf_manager import ConfManager
 from library.seed_error   import SeedError
+from library.kube_manager import KubeManager
 
 
-class Namespace():
+class Namespace:
 	def __init__(self, name):
 		self.name = name
 		self.path = File.path(NAMESPACES_DIR_NAME, self.name)
@@ -22,19 +23,28 @@ class Namespace():
 
 	######################### PUBLIC #########################
 
+	@staticmethod
+	def get_all():
+		return [Namespace(ns_dir) for ns_dir in File.list_dirs(NAMESPACES_DIR_NAME)]
+
 	def create(self):
 		try:
 			File.mkdir(self.path)
-			self.conf.create()
+			self.conf.create({'namespace': self.name})
+			KubeManager.create_namespace(self.name)
 			print(f'Created Namespace: "{self.name}"')
 			return self
 		except Exception as e:
 			SeedError.error_exit(f'Error creating namespace: {e}', file=sys.stderr)
 
+	def create_like(self, namespace_name):
+		...
+
 	def delete(self):
 		self._guard()
 		try:
 			File.rm(self.path)
+			KubeManager.delete_namespace(self.name)
 		except SeedError as e:
 			SeedError.error_exit(str(e))
 		print(f'Deleted Namespace: "{self.name}".')

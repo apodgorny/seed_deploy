@@ -1,4 +1,4 @@
-import os
+import re
 import json
 import importlib.util
 
@@ -15,10 +15,13 @@ class ConfManager:
 
 	######################### PRIVATE #######################
 
-	def _init(self):
+	def _init(self, additional_values=None):
+		additional_values = additional_values if additional_values else {}
 		if not File.exists(self.path):
 			File.mkdir(self.path)
-			File.write(self.constants_path, File.read('templates/constants.json'))
+			constants = json.loads(File.read('templates/constants.json'))
+			constants.update(additional_values)
+			File.write(self.constants_path, json.dumps(constants))
 			File.write(self.variables_path, File.read('templates/variables.py'))
 
 		self._read_constants()
@@ -35,12 +38,12 @@ class ConfManager:
 			spec.loader.exec_module(module)
 			self.variables = module.Variables()
 		else:
-			print(f'Warning: "{path}" does not exist.')
+			print(f'Warning: "{self.path}" does not exist.')
 
 	######################### PUBLIC #########################
 
-	def create(self):
-		self._init()
+	def create(self, additional_values):
+		self._init(additional_values)
 
 	def get(self, name, default=None):
 		self._init()
@@ -57,7 +60,12 @@ class ConfManager:
 		
 		return default
 
-	def apply(template_content):
+	def set(self, key, value):
+		self._init()
+
+
+
+	def apply(self, template_content):
 		self._init()
 		pattern = re.compile('$namespace.' + r'\.(([a-zA-Z]+[a-zA-Z0-9_]*)')
 		

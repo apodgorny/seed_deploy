@@ -25,6 +25,11 @@ class Manager(CommandManager):
 			'pod'       : ['podset_name', 'pod_name', 'namespace_name'],
 			'all'       : []
 		},
+		'deploy': {
+			'podset'    : ['podset_name', 'namespace_name'],
+			'pod'       : ['podset_name', 'pod_name', 'namespace_name'],
+			'all'       : []
+		},
 		'list': [],
 	}
 		
@@ -40,7 +45,7 @@ class Manager(CommandManager):
 		Pod(podset, pod_name).create()
 
 	@staticmethod
-	def create__namespace(namespace_name):
+	def create__namespace(namespace_name): # TODO: add optional param file (namespace.yaml)
 		Namespace(namespace_name).create()
 
 	@staticmethod
@@ -78,6 +83,26 @@ class Manager(CommandManager):
 	@staticmethod
 	def build__pod(podset_name, pod_name, namespace_name):
 		PodSet(podset_name).get(pod_name).build(namespace_name)
+
+	@staticmethod
+	def build__all():
+		for podset in PodSet.get_all():
+			for namespace in Namespace.get_all():
+				podset.build(namespace.name)
+
+	@staticmethod
+	def deploy__podset(podset_name, namespace_name):
+		PodSet(podset_name).deploy(namespace_name)
+
+	@staticmethod
+	def deploy__pod(podset_name, pod_name, namespace_name):
+		PodSet(podset_name).get(pod_name).deploy(namespace_name)
+
+	@staticmethod
+	def deploy__all():
+		for podset in PodSet.get_all():
+			for namespace in Namespace.get_all():
+				podset.deploy(namespace.name)
 
 
 if __name__ == '__main__':

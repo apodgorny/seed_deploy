@@ -64,9 +64,10 @@ class File:
 		return dirs
 
 	@staticmethod
-	def list_files(path='', ext=[]):
-		path = File.exists(path)
+	def list_files(path='', ext=None):
+		path  = File.exists(path)
 		files = []
+		ext   = [] if ext is None else ext
 		for item in sorted(os.listdir(path)):
 			item_path = os.path.join(path, item)
 			if os.path.isfile(item_path) and not item.startswith(('.', '_')) and item.endswith(tuple(ext)):

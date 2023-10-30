@@ -26,6 +26,10 @@ class PodSet:
 
 	######################### PUBLIC #########################
 
+	@staticmethod
+	def get_all():
+		return [PodSet(ps_dir) for ps_dir in File.list_dirs(PODSETS_DIR_NAME)]
+
 	def create(self):
 		if not File.exists(self.path):
 			File.mkdir(self.path)
@@ -58,6 +62,8 @@ class PodSet:
 			self.get(pod_name).build(namespace_name)
 		return self
 
-	def deploy(self, pod_names, namespace_names):
+	def deploy(self, namespace_name):
 		self._guard()
+		for pod_name in self.pods:
+			self.get(pod_name).deploy(namespace_name)
 		return self

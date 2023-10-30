@@ -1,6 +1,7 @@
 import os
 import re
 import sys
+import subprocess
 
 from settings import *
 
@@ -8,6 +9,7 @@ from library.file         import File
 from library.seed_error   import SeedError
 from library.conf_manager import ConfManager
 from library.namespace    import Namespace
+from library.kube_manager import KubeManager
 
 
 class Pod:
@@ -109,17 +111,9 @@ class Pod:
 
 		return self
 
-	def deploy(self, namespace_names):
+	def deploy(self, namespace_name):
 		self._guard()
-		# TODO: Add logic to deploy the pod to the given namespace names
+		ns_build_path = os.path.join(self.build_path, namespace_name)
+		for file in File.list_files(ns_build_path, ['yaml']):
+			KubeManager.apply(os.path.join(ns_build_path, file))
 		return self  # Assuming successful for now
-
-
-
-
-
-
-
-
-
-
