@@ -60,10 +60,8 @@ class ConfManager:
 		
 		return default
 
-	def set(self, key, value):
-		self._init()
-
-
+	def get_constants(self):
+		return json.loads(File.read(self.constants_path))
 
 	def apply(self, template_content):
 		self._init()

@@ -27,18 +27,20 @@ class Namespace:
 	def get_all():
 		return [Namespace(ns_dir) for ns_dir in File.list_dirs(NAMESPACES_DIR_NAME)]
 
-	def create(self):
+	def create(self, namespace_like_name=None):
 		try:
 			File.mkdir(self.path)
-			self.conf.create({'namespace': self.name})
+			constants = {}
+			if (namespace_like_name):
+				constants.update(Namespace(namespace_like_name).conf.get_constants())
+				
+			constants['namespace'] = self.name
+			self.conf.create(constants)
 			KubeManager.create_namespace(self.name)
 			print(f'Created Namespace: "{self.name}"')
 			return self
 		except Exception as e:
 			SeedError.error_exit(f'Error creating namespace: {e}', file=sys.stderr)
-
-	def create_like(self, namespace_name):
-		...
 
 	def delete(self):
 		self._guard()

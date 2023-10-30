@@ -15,6 +15,9 @@ class Manager(CommandManager):
 			'pod'       : ['podset_name', 'pod_name'],
 			'namespace' : ['namespace_name']  
 		},
+		'create_like': {
+			'namespace' : ['namespace_name', 'namespace_like_name']
+		},
 		'delete': {
 			'podset'    : ['podset_name'],
 			'pod'       : ['podset_name', 'pod_name'],
@@ -45,8 +48,12 @@ class Manager(CommandManager):
 		Pod(podset, pod_name).create()
 
 	@staticmethod
-	def create__namespace(namespace_name): # TODO: add optional param file (namespace.yaml)
+	def create__namespace(namespace_name):
 		Namespace(namespace_name).create()
+
+	@staticmethod
+	def create_like__namespace(namespace_name, namespace_like_name):
+		Namespace(namespace_name).create(namespace_like_name)
 
 	@staticmethod
 	def delete__podset(podset_name):
