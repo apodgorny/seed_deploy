@@ -42,7 +42,7 @@ class ConfManager:
 
 	######################### PUBLIC #########################
 
-	def create(self, additional_values):
+	def create(self, additional_values=None):
 		self._init(additional_values)
 
 	def get(self, name, default=None):

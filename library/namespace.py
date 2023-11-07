@@ -34,7 +34,7 @@ class Namespace:
 			if namespace_like_name:
 				constants.update(Namespace(namespace_like_name).conf.get_constants())
 				
-			constants['namespace'] = self.name
+			constants['NAME'] = self.name
 			self.conf.create(constants)
 			KubeManager.create_namespace(self.name)
 			print(f'Created Namespace: "{self.name}"')

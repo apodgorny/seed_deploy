@@ -13,7 +13,7 @@ class Manager(CommandManager):
 		'create': {
 			'podset'    : ['podset_name'],
 			'pod'       : ['podset_name', 'pod_name'],
-			'namespace' : ['namespace_name']  
+			'namespace' : ['namespace_name']
 		},
 		'create_like': {
 			'namespace' : ['namespace_name', 'namespace_like_name']
